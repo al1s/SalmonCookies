@@ -116,3 +116,10 @@ storeSeatac.fillCookiesPerHour();
 storeSeattleCenter.fillCookiesPerHour();
 storeCapHill.fillCookiesPerHour();
 storeAlki.fillCookiesPerHour();
+
+var lists = document.getElementById('list');
+renderStore(lists, storePike);
+renderStore(lists, storeSeatac);
+renderStore(lists, storeSeattleCenter);
+renderStore(lists, storeCapHill);
+renderStore(lists, storeAlki);
