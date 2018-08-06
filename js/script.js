@@ -32,6 +32,37 @@ function activitySimulator() {
   }
 }
 
+function createElmWithContent(elmName, content) {
+  var elm = document.createElement(elmName);
+  elm.textContent = content;
+  return elm;
+}
+
+function make12HourLabel(number) {
+  var hour12Label;
+  if (number === 0 || number === 24) hour12Label = '12am';
+  else if (number > 11 && number <= 24) hour12Label = `${number - 12}pm`;
+  else if (number > 0 && number < 12) hour12Label = `${number}am`;
+  return hour12Label;
+}
+
+function renderStore(parentElm, storeObj) {
+  var timeShift = 6;
+  parentElm.appendChild(createElmWithContent('h2', storeObj.name));
+  var listNode = document.createElement('ujl');
+  storeObj.cookiesBoughtHour.forEach((elm, ndx) => {
+    var listElmNode = createElmWithContent(
+      'li',
+      `${make12HourLabel(ndx + timeShift)}: ${elm} cookies`
+    );
+    listNode.appendChild(listElmNode);
+  });
+  listNode.appendChild(
+    createElmWithContent('li', `Total: ${storeObj.cookiesTotalDay} cookies`)
+  );
+  parentElm.appendChild(listNode);
+}
+
 var storePike = {
   name: '1st and Pike',
   minCustomers: 23,
