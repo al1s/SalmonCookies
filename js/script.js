@@ -3,7 +3,7 @@
 /* eslint vars-on-top: 0 */
 /* eslint prefer-const: 0 */
 /* eslint arrow-parens: 0 */
-/* eslint no-restricted-syntax: 0j */
+/* eslint no-restricted-syntax: 0 */
 /* eslint no-undef: 0 */
 
 // 1. Create an object for each store.
@@ -25,11 +25,14 @@ function activitySimulator() {
   this.cookiesBoughtHour = [];
   for (let i = 0; i < 15; i++) {
     this.cookiesBoughtHour.push(
-      Math.floor(Math.random() * (this.maxCustomers - this.minCustomers)) +
-        this.minCustomers
+      Math.floor(
+        (Math.floor(Math.random() * (this.maxCustomers - this.minCustomers)) +
+          this.minCustomers) *
+          this.avgCookiesCustBought
+      )
     );
-    this.cookiesTotalDay = this.cookiesBoughtHour.reduce(adder, 0);
   }
+  this.cookiesTotalDay = this.cookiesBoughtHour.reduce(adder, 0);
 }
 
 function createElmWithContent(elmName, content) {
@@ -41,7 +44,8 @@ function createElmWithContent(elmName, content) {
 function make12HourLabel(number) {
   var hour12Label;
   if (number === 0 || number === 24) hour12Label = '12am';
-  else if (number > 11 && number <= 24) hour12Label = `${number - 12}pm`;
+  else if (number === 12) hour12Label = '12pm';
+  else if (number > 12 && number < 24) hour12Label = `${number - 12}pm`;
   else if (number > 0 && number < 12) hour12Label = `${number}am`;
   return hour12Label;
 }
@@ -49,7 +53,7 @@ function make12HourLabel(number) {
 function renderStore(parentElm, storeObj) {
   var timeShift = 6;
   parentElm.appendChild(createElmWithContent('h2', storeObj.name));
-  var listNode = document.createElement('ujl');
+  var listNode = document.createElement('ul');
   storeObj.cookiesBoughtHour.forEach((elm, ndx) => {
     var listElmNode = createElmWithContent(
       'li',
