@@ -16,6 +16,8 @@
 //      activitySimulator() to fill prev array;
 //      setMetrics() to fill first three vars;
 // 3. Print array and total for each object as a list
+// 4. Add constuctor.
+// 5. Replace lists with a table
 
 function adder(a, b) {
   return a + b;
@@ -50,11 +52,11 @@ function make12HourLabel(number) {
   return hour12Label;
 }
 
-function renderStore(parentElm, storeObj) {
+function renderStore(parentElm) {
   var timeShift = 6;
-  parentElm.appendChild(createElmWithContent('h2', storeObj.name));
+  parentElm.appendChild(createElmWithContent('h2', this.name));
   var listNode = document.createElement('ul');
-  storeObj.cookiesBoughtHour.forEach((elm, ndx) => {
+  this.cookiesBoughtHour.forEach((elm, ndx) => {
     var listElmNode = createElmWithContent(
       'li',
       `${make12HourLabel(ndx + timeShift)}: ${elm} cookies`
@@ -62,58 +64,30 @@ function renderStore(parentElm, storeObj) {
     listNode.appendChild(listElmNode);
   });
   listNode.appendChild(
-    createElmWithContent('li', `Total: ${storeObj.cookiesTotalDay} cookies`)
+    createElmWithContent('li', `Total: ${this.cookiesTotalDay} cookies`)
   );
   parentElm.appendChild(listNode);
 }
 
-var storePike = {
-  name: '1st and Pike',
-  minCustomers: 23,
-  maxCustomers: 65,
-  avgCookiesCustBought: 6.3,
-  cookiesBoughtHour: [],
-  cookiesTotalDay: 0,
-  fillCookiesPerHour: activitySimulator
-};
+function Store(name, minCust, maxCust, avgCookies) {
+  [
+    this.name,
+    this.minCustomers,
+    this.maxCustomers,
+    this.avgCookiesCustBought
+  ] = [name, minCust, maxCust, avgCookies];
+  this.cookiesBoughtHour = [];
+  this.cookiesTotalDay = 0;
+}
 
-var storeSeatac = {
-  name: 'SeaTac Airport',
-  minCustomers: 3,
-  maxCustomers: 24,
-  avgCookiesCustBought: 1.2,
-  cookiesBoughtHour: [],
-  cookiesTotalDay: 0,
-  fillCookiesPerHour: activitySimulator
-};
+Store.prototype.fillCookiesPerHour = activitySimulator;
+Store.prototype.renderTo = renderStore;
 
-var storeSeattleCenter = {
-  name: 'Seattle Center',
-  minCustomers: 11,
-  maxCustomers: 24,
-  avgCookiesCustBought: 3.7,
-  cookiesBoughtHour: [],
-  cookiesTotalDay: 0,
-  fillCookiesPerHour: activitySimulator
-};
-var storeCapHill = {
-  name: 'Capitol Hill',
-  minCustomers: 20,
-  maxCustomers: 38,
-  avgCookiesCustBought: 2.3,
-  cookiesBoughtHour: [],
-  cookiesTotalDay: 0,
-  fillCookiesPerHour: activitySimulator
-};
-var storeAlki = {
-  name: 'Alki',
-  minCustomers: 2,
-  maxCustomers: 16,
-  avgCookiesCustBought: 4.6,
-  cookiesBoughtHour: [],
-  cookiesTotalDay: 0,
-  fillCookiesPerHour: activitySimulator
-};
+var storePike = new Store('1st and Pike', 23, 65, 6.3);
+var storeSeatac = new Store('SeaTac Airport', 3, 24, 1.2);
+var storeSeattleCenter = new Store('Seattle Center', 11, 24, 3.7);
+var storeCapHill = new Store('Capitol Hill', 20, 38, 6.3);
+var storeAlki = new Store('Alki', 2, 16, 4.6);
 
 storePike.fillCookiesPerHour();
 storeSeatac.fillCookiesPerHour();
@@ -122,8 +96,8 @@ storeCapHill.fillCookiesPerHour();
 storeAlki.fillCookiesPerHour();
 
 var lists = document.getElementById('list');
-renderStore(lists, storePike);
-renderStore(lists, storeSeatac);
-renderStore(lists, storeSeattleCenter);
-renderStore(lists, storeCapHill);
-renderStore(lists, storeAlki);
+storePike.renderTo(lists);
+storeSeatac.renderTo(lists);
+storeSeattleCenter.renderTo(lists);
+storeCapHill.renderTo(lists);
+storeAlki.renderTo(lists);
