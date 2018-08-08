@@ -28,7 +28,7 @@
 //      to have an ability to add/remove rows, footer, header.
 //   2. Render totals on request with additional check whether the DOM for it
 //      is already in place or we should create it from scratch.
-//   3. Keep mutable values (state) for each merchant in an object inside
+//   +3. Keep mutable values (state) for each merchant in an object inside
 //      the merchant object to provide a universal access to such data. For
 //      example, store.operations.sales.hourly/total and
 //               store.operations.staff.hourly/total.
@@ -39,23 +39,26 @@ function adder(a, b) {
 }
 
 function activitySimulator() {
-  this.tossersPerHour = [];
-  this.cookiesBoughtHour = [];
+  var salesHourly = [];
+  var staffHourly = [];
   for (let i = 0; i < 15; i++) {
-    var currentHourCookiesSold = Math.floor(
+    var currentSales = Math.floor(
       (Math.floor(Math.random() * (this.maxCustomers - this.minCustomers)) +
         this.minCustomers) *
         this.avgCookiesCustBought
     );
 
-    this.cookiesBoughtHour.push(currentHourCookiesSold);
-    this.tossersPerHour.push(
-      currentHourCookiesSold / tosserCapacity > 2
-        ? Math.ceil(currentHourCookiesSold / tosserCapacity)
-        : tossersLimit
+    salesHourly.push(currentSales);
+    staffHourly.push(
+      currentSales / staffCapacity > 2
+        ? Math.ceil(currentSales / staffCapacity)
+        : staffLimit
     );
   }
-  this.cookiesTotalDay = this.cookiesBoughtHour.reduce(adder, 0);
+  this.operations.sales.hourly = salesHourly;
+  this.operations.staff.hourly = staffHourly;
+
+  this.operations.sales.total = salesHourly.reduce(adder, 0);
 }
 
 function createElmWithContent(elmName, elmClass, content) {
@@ -77,19 +80,8 @@ function make12HourLabel(number) {
 function renderStore(parentElm, target) {
   var row = createElmWithContent('tr', 'table__body  row');
   row.appendChild(createElmWithContent('th', 'header__cell', this.name));
-  switch (target) {
-  case 'sales':
-    var innerArr = this.cookiesBoughtHour;
-    var totalElm = this.cookiesTotalDay;
-    break;
-  case 'staff':
-    var innerArr = this.tossersPerHour;
-    var totalElm = this.tossersTotalDay;
-    break;
-  default:
-    var innerArr;
-    break;
-  }
+  var innerArr = this.operations[target].hourly;
+  var totalElm = this.operations[target].total;
   innerArr.forEach(elm => {
     var tdElmNode = createElmWithContent('td', 'body__cell', elm);
     row.appendChild(tdElmNode);
@@ -136,31 +128,16 @@ function getHeaderTimeList(startWithAnHour) {
 
 // compose footer content
 function getFooterList(target) {
-  var storeTotalsPerHour = [];
-  var address;
-
-  switch (target) {
-  case 'sales':
-    address = 'cookiesBoughtHour';
-    break;
-  case 'staff':
-    address = 'tossersPerHour';
-    break;
-  default:
-    break;
-  }
-  // store all cookies per hour
-  var cookiesHourStore = stores.map(elm => elm[address]);
+  var footer = [];
+  var salesHourly = stores.map(elm => elm.operations[target].hourly);
 
   // tally up columns
   for (let i = 0; i < 15; i++) {
-    storeTotalsPerHour.push(
-      cookiesHourStore.reduce((total, elm) => total + elm[i], 0)
-    );
+    footer.push(salesHourly.reduce((total, elm) => total + elm[i], 0));
   }
-  storeTotalsPerHour.push(storeTotalsPerHour.reduce(adder, 0));
-  storeTotalsPerHour.unshift('Totals');
-  return storeTotalsPerHour;
+  footer.push(footer.reduce(adder, 0));
+  footer.unshift('Totals');
+  return footer;
 }
 
 var shadowDOM = {};
@@ -172,18 +149,24 @@ function Store(name, minCust, maxCust, avgCookies) {
     this.maxCustomers,
     this.avgCookiesCustBought
   ] = [name, minCust, maxCust, avgCookies];
-  this.cookiesBoughtHour = [];
-  this.tossersPerHour = [];
-  this.cookiesTotalDay = 0;
-  this.tossersTotalDay = 0;
+  this.operations = {
+    sales: {
+      hourly: [],
+      total: 0
+    },
+    staff: {
+      hourly: [],
+      total: 0
+    }
+  };
 }
 
-Store.prototype.fillCookiesPerHour = activitySimulator;
+Store.prototype.activitySimulator = activitySimulator;
 Store.prototype.renderTo = renderStore;
 
 var timeShift = 6;
-var tossersLimit = 2;
-var tosserCapacity = 20;
+var staffLimit = 2;
+var staffCapacity = 20;
 var storePike = new Store('1st and Pike', 23, 65, 6.3);
 var storeSeatac = new Store('SeaTac Airport', 3, 24, 1.2);
 var storeSeattleCenter = new Store('Seattle Center', 11, 24, 3.7);
@@ -218,7 +201,7 @@ var tableBody = document.createElement('tbody');
 
 // add rows for each store
 stores.forEach(elm => {
-  elm.fillCookiesPerHour();
+  elm.activitySimulator();
   var tableRow = elm.renderTo(tableBody, 'sales');
   // put tableRow into an array in shadowDOM.tableName.rows;
   console.log(tableRow);
@@ -243,7 +226,7 @@ var tableStaff = tables.appendChild(
 
 // compose header content and render it
 renderHeader(tableStaff, headerList);
-tableBody = document.createElement('tbody');
+var tableBody = document.createElement('tbody');
 
 // add rows for each store
 stores.forEach(elm => {
