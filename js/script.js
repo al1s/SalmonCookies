@@ -24,21 +24,28 @@ function adder(a, b) {
 }
 
 function activitySimulator() {
+  this.tossersPerHour = [];
   this.cookiesBoughtHour = [];
   for (let i = 0; i < 15; i++) {
-    this.cookiesBoughtHour.push(
-      Math.floor(
-        (Math.floor(Math.random() * (this.maxCustomers - this.minCustomers)) +
-          this.minCustomers) *
-          this.avgCookiesCustBought
-      )
+    var currentHourCookiesSold = Math.floor(
+      (Math.floor(Math.random() * (this.maxCustomers - this.minCustomers)) +
+        this.minCustomers) *
+        this.avgCookiesCustBought
+    );
+
+    this.cookiesBoughtHour.push(currentHourCookiesSold);
+    this.tossersPerHour.push(
+      currentHourCookiesSold / tosserCapacity > 2
+        ? Math.ceil(currentHourCookiesSold / tosserCapacity)
+        : tossersLimit
     );
   }
   this.cookiesTotalDay = this.cookiesBoughtHour.reduce(adder, 0);
 }
 
-function createElmWithContent(elmName, content) {
+function createElmWithContent(elmName, elmClass, content) {
   var elm = document.createElement(elmName);
+  elm.className = elmClass;
   elm.textContent = content;
   return elm;
 }
@@ -52,33 +59,49 @@ function make12HourLabel(number) {
   return hour12Label;
 }
 
-function renderStore(parentElm) {
-  var row = createElmWithContent('tr');
-  row.className = 'table__body  row';
-  row.appendChild(createElmWithContent('th', this.name));
-  this.cookiesBoughtHour.forEach(elm => {
-    var tdElmNode = createElmWithContent('td', elm);
+function renderStore(parentElm, target) {
+  var row = createElmWithContent('tr', 'table__body  row');
+  row.appendChild(createElmWithContent('th', 'header__cell', this.name));
+  switch (target) {
+  case 'cookies':
+    var innerArr = this.cookiesBoughtHour;
+    var totalElm = this.cookiesTotalDay;
+    break;
+  case 'tossers':
+    var innerArr = this.tossersPerHour;
+    var totalElm = this.tossersTotalDay;
+    break;
+  default:
+    var innerArr;
+    break;
+  }
+  innerArr.forEach(elm => {
+    var tdElmNode = createElmWithContent('td', 'body__cell', elm);
     row.appendChild(tdElmNode);
   });
-  row.appendChild(createElmWithContent('td', this.cookiesTotalDay));
+  row.appendChild(
+    createElmWithContent('td', 'body__cell  table__totals', totalElm)
+  );
   parentElm.appendChild(row);
 }
 
 function renderHeader(parentElm, headerElmList) {
-  var headerDeclaration = createElmWithContent('thead');
-  var headerRow = createElmWithContent('tr');
-  headerRow.className = 'header';
-  var headerNodes = headerElmList.map(elm => createElmWithContent('th', elm));
+  var headerDeclaration = createElmWithContent('thead', 'table__header');
+  var headerRow = createElmWithContent('tr', 'header__row');
+  var headerNodes = headerElmList.map(elm =>
+    createElmWithContent('th', 'header__cell', elm)
+  );
   headerNodes.forEach(elm => headerRow.appendChild(elm));
   headerDeclaration.appendChild(headerRow);
   parentElm.appendChild(headerDeclaration);
 }
 
 function renderFooter(parentElm, footerElmList) {
-  var footerDeclaration = createElmWithContent('tfoot');
-  var footerRow = createElmWithContent('tr');
-  footerRow.className = 'footer';
-  var footerNodes = footerElmList.map(elm => createElmWithContent('td', elm));
+  var footerDeclaration = createElmWithContent('tfoot', 'footer');
+  var footerRow = createElmWithContent('tr', 'footer__row');
+  var footerNodes = footerElmList.map(elm =>
+    createElmWithContent('td', 'footer__cell  table__totals', elm)
+  );
   footerNodes.forEach(elm => footerRow.appendChild(elm));
   footerDeclaration.appendChild(footerRow);
   parentElm.appendChild(footerDeclaration);
@@ -92,13 +115,17 @@ function Store(name, minCust, maxCust, avgCookies) {
     this.avgCookiesCustBought
   ] = [name, minCust, maxCust, avgCookies];
   this.cookiesBoughtHour = [];
+  this.tossersPerHour = [];
   this.cookiesTotalDay = 0;
+  this.tossersTotalDay = 0;
 }
 
 Store.prototype.fillCookiesPerHour = activitySimulator;
 Store.prototype.renderTo = renderStore;
 
 var timeShift = 6;
+var tossersLimit = 2;
+var tosserCapacity = 20;
 var storePike = new Store('1st and Pike', 23, 65, 6.3);
 var storeSeatac = new Store('SeaTac Airport', 3, 24, 1.2);
 var storeSeattleCenter = new Store('Seattle Center', 11, 24, 3.7);
@@ -114,28 +141,80 @@ var stores = [
 ];
 
 var lists = document.getElementById('list');
-var table = lists.appendChild(document.createElement('table'));
-table.className = 'table';
+
+lists.appendChild(
+  createElmWithContent('h2', 'table__text-header', 'Cookie sales by store')
+);
+
+// render table with cookies
+var tableSales = lists.appendChild(
+  createElmWithContent('table', 'table  table__sales')
+);
+
+// compose header content and render it
 var headerList = new Array(15).fill('').map(_ => make12HourLabel(timeShift++));
 headerList.unshift('');
 headerList.push('Daily Location Total');
-renderHeader(table, headerList);
+renderHeader(tableSales, headerList);
 var tableBody = document.createElement('tbody');
 
+// add rows for each store
 stores.forEach(elm => {
   elm.fillCookiesPerHour();
-  elm.renderTo(tableBody);
+  elm.renderTo(tableBody, 'cookies');
 });
+tableSales.appendChild(tableBody);
 
-table.appendChild(tableBody);
+// compose footer content and render it
 var storeTotalsPerHour = [];
+
+// store all cookies per hour
 var cookiesHourStore = stores.map(elm => elm['cookiesBoughtHour']);
+
+// tally up columns
 for (let i = 0; i < 15; i++) {
   storeTotalsPerHour.push(
     cookiesHourStore.reduce((total, elm) => total + elm[i], 0)
   );
 }
-
 storeTotalsPerHour.push(storeTotalsPerHour.reduce(adder, 0));
 storeTotalsPerHour.unshift('Totals');
-renderFooter(table, storeTotalsPerHour);
+renderFooter(tableSales, storeTotalsPerHour);
+
+// render table with staff
+timeShift = 6;
+lists.appendChild(
+  createElmWithContent('h2', 'table__text-header', 'Staff requirements')
+);
+var tableStaff = lists.appendChild(
+  createElmWithContent('table', 'table  table__staff')
+);
+
+// compose header content and render it
+headerList = new Array(15).fill('').map(_ => make12HourLabel(timeShift++));
+headerList.unshift('');
+headerList.push('Daily Location Total');
+renderHeader(tableStaff, headerList);
+tableBody = document.createElement('tbody');
+
+// add rows for each store
+stores.forEach(elm => {
+  elm.renderTo(tableBody, 'tossers');
+});
+tableStaff.appendChild(tableBody);
+
+// compose footer content and render it
+storeTotalsPerHour = [];
+
+// store all cookies per hour
+var tossersHourStore = stores.map(elm => elm['tossersPerHour']);
+
+// tally up columns
+for (let i = 0; i < 15; i++) {
+  storeTotalsPerHour.push(
+    tossersHourStore.reduce((total, elm) => total + elm[i], 0)
+  );
+}
+storeTotalsPerHour.push(storeTotalsPerHour.reduce(adder, 0));
+storeTotalsPerHour.unshift('Totals');
+renderFooter(tableStaff, storeTotalsPerHour);
