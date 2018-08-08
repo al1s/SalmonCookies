@@ -77,7 +77,7 @@ function make12HourLabel(number) {
   return hour12Label;
 }
 
-function renderStore(parentElm, target) {
+function renderStore(target) {
   var row = createElmWithContent('tr', 'table__body  row');
   row.appendChild(createElmWithContent('th', 'header__cell', this.name));
   var innerArr = this.operations[target].hourly;
@@ -89,11 +89,11 @@ function renderStore(parentElm, target) {
   row.appendChild(
     createElmWithContent('td', 'body__cell  table__totals', totalElm)
   );
-  parentElm.appendChild(row);
+  // parentElm.appendChild(row);
   return row;
 }
 
-function renderHeader(parentElm, headerElmList) {
+function renderHeader(headerElmList) {
   var headerDeclaration = createElmWithContent('thead', 'table__header');
   var headerRow = createElmWithContent('tr', 'header__row');
   var headerNodes = headerElmList.map(elm =>
@@ -101,11 +101,11 @@ function renderHeader(parentElm, headerElmList) {
   );
   headerNodes.forEach(elm => headerRow.appendChild(elm));
   headerDeclaration.appendChild(headerRow);
-  parentElm.appendChild(headerDeclaration);
+  // parentElm.appendChild(headerDeclaration);
   return headerDeclaration;
 }
 
-function renderFooter(parentElm, footerElmList) {
+function renderFooter(footerElmList) {
   var footerDeclaration = createElmWithContent('tfoot', 'footer');
   var footerRow = createElmWithContent('tr', 'footer__row');
   var footerNodes = footerElmList.map(elm =>
@@ -113,7 +113,8 @@ function renderFooter(parentElm, footerElmList) {
   );
   footerNodes.forEach(elm => footerRow.appendChild(elm));
   footerDeclaration.appendChild(footerRow);
-  parentElm.appendChild(footerDeclaration);
+  // parentElm.appendChild(footerDeclaration);
+  return footerDeclaration;
 }
 
 // compose header content
@@ -140,7 +141,63 @@ function getFooterList(target) {
   return footer;
 }
 
-var shadowDOM = {};
+// add new store to the page
+// var storeBelki = new Store('Belki', 33, 55, 5.6);
+function renderNewStore(store, dataDescription) {
+  store.activitySimulator();
+  stores.push(store);
+  dataDescription.forEach((table, ndx) => {
+    var row = store.renderTo(table.target);
+    shadowDOM[ndx].rows.push(row);
+    shadowDOM[ndx].body.appendChild(row);
+    var footerData = getFooterList(table.target);
+    var footer = renderFooter(footerData);
+    shadowDOM[ndx].table.removeChild(shadowDOM[ndx].footer);
+    shadowDOM[ndx].footer = footer;
+    shadowDOM[ndx].table.appendChild(footer);
+  });
+}
+
+function renderData(data, dataDescription, parentElm) {
+  dataDescription.forEach((table, ndx) => {
+    // create text header for current table
+    parentElm.appendChild(
+      createElmWithContent('h2', 'table__text-header', table.name)
+    );
+
+    // create table
+    var tableElm = parentElm.appendChild(
+      createElmWithContent('table', table.styles)
+    );
+
+    shadowDOM.push({ table: tableElm });
+
+    var headerList = getHeaderTimeList(timeShift);
+    shadowDOM[ndx].header = renderHeader(headerList);
+    shadowDOM[ndx].body = document.createElement('tbody');
+
+    shadowDOM[ndx].rows = [];
+    // add rows for each store
+    data.forEach(store => {
+      if (ndx === 0) store.activitySimulator();
+      var row = store.renderTo(table.target);
+      shadowDOM[ndx].rows.push(row);
+      shadowDOM[ndx].body.appendChild(row);
+    });
+
+    var footerList = getFooterList(table.target);
+    shadowDOM[ndx].footer = renderFooter(footerList);
+
+    // render to real DOM
+    Object.keys(shadowDOM[ndx]).forEach(elm => {
+      if (['header', 'body', 'footer'].includes(elm)) {
+        shadowDOM[ndx].table.appendChild(shadowDOM[ndx][elm]);
+      }
+    });
+  });
+}
+
+var shadowDOM = [];
 
 function Store(name, minCust, maxCust, avgCookies) {
   [
@@ -182,57 +239,17 @@ var stores = [
 ];
 
 var tables = document.getElementById('tables');
+var storesDescription = [
+  {
+    name: 'Cookie sales by store',
+    styles: 'table  table__sales',
+    target: 'sales'
+  },
+  {
+    name: 'Staff requirements',
+    styles: 'table  table__staff',
+    target: 'staff'
+  }
+];
 
-tables.appendChild(
-  createElmWithContent('h2', 'table__text-header', 'Cookie sales by store')
-);
-
-// create table with cookies
-var tableSales = tables.appendChild(
-  createElmWithContent('table', 'table  table__sales')
-);
-
-var headerList = getHeaderTimeList(timeShift);
-var tableHeader = renderHeader(tableSales, headerList);
-// put tableHeader into an array in shadowDOM.tableName.rows;
-console.log(tableHeader);
-
-var tableBody = document.createElement('tbody');
-
-// add rows for each store
-stores.forEach(elm => {
-  elm.activitySimulator();
-  var tableRow = elm.renderTo(tableBody, 'sales');
-  // put tableRow into an array in shadowDOM.tableName.rows;
-  console.log(tableRow);
-});
-// put? tableBody into an array in shadowDOM.tableName.rows;
-console.log(tableBody);
-tableSales.appendChild(tableBody);
-
-var footerList = getFooterList('sales');
-renderFooter(tableSales, footerList);
-
-////////////////////////////////////////
-// ANOTHER TABLE!!!
-///////////////////////////////////////
-// render table with staff
-tables.appendChild(
-  createElmWithContent('h2', 'table__text-header', 'Staff requirements')
-);
-var tableStaff = tables.appendChild(
-  createElmWithContent('table', 'table  table__staff')
-);
-
-// compose header content and render it
-renderHeader(tableStaff, headerList);
-var tableBody = document.createElement('tbody');
-
-// add rows for each store
-stores.forEach(elm => {
-  elm.renderTo(tableBody, 'staff');
-});
-tableStaff.appendChild(tableBody);
-
-var footerList = getFooterList('staff');
-renderFooter(tableStaff, footerList);
+renderData(stores, storesDescription, tables);
