@@ -21,7 +21,6 @@ body {
   display: inline-block;
   font-size: 1.4em;
   font-weight: 700;
-  font-family: "Playfair Display", serif;
   font-family: "Merriweather", serif;
   line-height: 1;
   margin: 0;
@@ -98,18 +97,26 @@ body {
 .cards {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-around;
 }
 .card {
+  border: var(--secondary-color) 2px solid;
   flex: 0 0 auto;
-  min-width: 10rem;
+  margin: 0.3em;
+  min-width: 10em;
+  padding: 0.5em;
 }
 .card__header {
+  font-family: "Playfair Display", serif;
+  font-size: 1.3em;
+  padding-bottom: 0.6em;
+  padding-top: 0.2em;
 }
-.card__address {
-}
+.card__address,
 .card__hours {
-}
-.main__mission {
+  font-family: "Oswald", sans-serif;
+  padding-bottom: 0.4em;
+  padding-top: 0.2em;
 }
 .media__object {
 }
@@ -117,15 +124,23 @@ body {
 }
 .media__text {
 }
+.main__mission {
+}
 .mission__text {
+}
+.mission__image {
 }
 .main__merchendise {
 }
 .merchendise__text {
 }
+.merchendise__image {
+}
 .main__about {
 }
 .about__text {
+}
+.about__image {
 }
 
 html {
