@@ -81,7 +81,7 @@ body {
 
 .table {
   border-collapse: collapse;
-  border-spaceing: 0.5rem;
+  border-spacing: 0.5rem;
   margin: 2rem auto;
   text-align: center;
   width: 80vw;

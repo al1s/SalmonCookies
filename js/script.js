@@ -1,10 +1,4 @@
 'use strict';
-/* eslint no-var: 0 */
-/* eslint vars-on-top: 0 */
-/* eslint prefer-const: 0 */
-/* eslint arrow-parens: 0 */
-/* eslint no-restricted-syntax: 0 */
-/* eslint no-undef: 0 */
 
 // Day 1
 // 1. Create an object for each store.
@@ -119,9 +113,10 @@ function renderFooter(footerElmList) {
 
 // compose header content
 function getHeaderTimeList(startWithAnHour) {
-  var headerList = new Array(15)
-    .fill('')
-    .map(_ => make12HourLabel(startWithAnHour++));
+  var headerList = new Array(15).fill(0);
+  for (let i = 0; i < 15; i++) {
+    headerList[i] = make12HourLabel(i + startWithAnHour);
+  }
   headerList.unshift('');
   headerList.push('Daily Location Total');
   return headerList;
