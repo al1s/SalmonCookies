@@ -141,6 +141,20 @@ function getFooterList(target) {
   return footer;
 }
 
+function addStore(e) {
+  e.preventDefault();
+  var [storeName, minCust, maxCust, avgCookies] = [
+    document.getElementById('storeName').value,
+    document.getElementById('minCust').value,
+    document.getElementById('maxCust').value,
+    document.getElementById('avgCookies').value
+  ];
+  renderNewStore(
+    new Store(storeName, minCust, maxCust, avgCookies),
+    storesDescription
+  );
+  e.target.reset();
+}
 // add new store to the page
 // var storeBelki = new Store('Belki', 33, 55, 5.6);
 function renderNewStore(store, dataDescription) {
@@ -170,12 +184,15 @@ function renderData(data, dataDescription, parentElm) {
       createElmWithContent('table', table.styles)
     );
 
+    // collect it separetly from the page to have easy access to it later
     shadowDOM.push({ table: tableElm });
 
+    // generate header and put it to storage
     var headerList = getHeaderTimeList(timeShift);
     shadowDOM[ndx].header = renderHeader(headerList);
     shadowDOM[ndx].body = document.createElement('tbody');
 
+    // generate rows, put it to storage and append to parent element
     shadowDOM[ndx].rows = [];
     // add rows for each store
     data.forEach(store => {
@@ -185,10 +202,11 @@ function renderData(data, dataDescription, parentElm) {
       shadowDOM[ndx].body.appendChild(row);
     });
 
+    // generate footer and put it to storage
     var footerList = getFooterList(table.target);
     shadowDOM[ndx].footer = renderFooter(footerList);
 
-    // render to real DOM
+    // render to the real DOM
     Object.keys(shadowDOM[ndx]).forEach(elm => {
       if (['header', 'body', 'footer'].includes(elm)) {
         shadowDOM[ndx].table.appendChild(shadowDOM[ndx][elm]);
@@ -253,3 +271,6 @@ var storesDescription = [
 ];
 
 renderData(stores, storesDescription, tables);
+
+var addStoreFormElm = document.getElementById('addNewStoreForm');
+addStoreFormElm.addEventListener('submit', addStore);

@@ -13,6 +13,26 @@
 <body>
   <main>
     <h1 class="main__header">Salmon cookies sales</h1>
+    <section class="new-entity-form">
+      <h2 class="new-entity-form__header">Add your new Store</h2>
+      <div class="new-entity-form__container">
+        <form class="new-entity-form__body" id="addNewStoreForm" action="/">
+          <label class="new-entity-form__label  new-entity-form__label--size-m" for="storeName">Store name</label>
+          <input class="new-entity-form__input  new-entity-form__input--size-l" type="text" id="storeName" name="storeName" />
+
+          <label class="new-entity-form__label  new-entity-form__label--size-m" for="minCust">Minimum customers per hour</label>
+          <input class="new-entity-form__input  new-entity-form__input--size-l" type="number" min="1" id="minCust" name="minCust" />
+
+          <label class="new-entity-form__label  new-entity-form__label--size-m" for="maxCust">Maximum customers per hour</label>
+          <input class="new-entity-form__input  new-entity-form__input--size-l" type="number" min="1" id="maxCust" name="maxCust" />
+
+          <label class="new-entity-form__label  new-entity-form__label--size-m" for="avgCookies">Average number of cookies per customer</label>
+          <input class="new-entity-form__input  new-entity-form__input--size-l" type="number" min="1" id="avgCookies" name="avgCookies"
+          />
+          <button class="btn new-entity-form__submit" id="btnSubmit">Add Store</button>
+        </form>
+      </div>
+    </section>
     <div id="tables"></div>
   </main>
 </body>
