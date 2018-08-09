@@ -82,3 +82,39 @@ This is a good point to refactor your code into smaller functions/methods if you
 Anywhere you have repeated chunks of code, maybe you can start to apply some DRY principles. Generally, once some chunk of code is appearing for a 3rd time or so, that's when you want to consider refactoring.
 
 When making code more DRY, look for repeated behaviors that act on different pieces of data. Put the behavior into a function that is declared with parameters to receive the unique data, and then replace the repeated code with the function called with the unique data in arguments.
+
+## Day 4
+
+### Public-Facing Page (index.html)
+
+Besides using the picture of the fish... you should use...
+
+A custom Google font for highlights
+
+A specified standard san-serif web font for data (such as Arial, Verdana, or Helvetica)
+
+A specified standard serif web font for text (such as Georgia, Times, etc.)
+
+Specified different font colors for all three font usages
+
+A background color for the default page background (make sure font colors have good contrast and are readable on this background)
+
+A different background color for elements such boxes and tables (so make sure the font colors contrast against this well, too!)
+
+Anything else you'd like to add related to style. But remember: simplicity, clarity, and consistency are good things in design.
+
+Be thoughtful about layout and overall organization of the page.
+
+Include all of the typical stuff that you'll find on the home page of a business: locations, hours, contact information, some text about how awesome the business is, etc. Be creative, and again, think about what is meaningful to a typical end user.
+
+Style up the public facing page (index.html) to make it appealing to customers. NOTE: You must use all of the images in the adjacent asset directory. Your client insists that you use Every. Single. One.
+
+Your public-facing index.html page should have all of the things you'd expect such a page to have for such a business: locations with addresses, hours open, contact information, and so us. Just do mockups of these things since this is not a real business, of course.
+
+You can also mock up references (either links or little sections on the index.html page) for things like About Us (company history and mission), Merchandise (sales of t-shirts, mugs, stickers, etc.), links to salmon events like the Salmon Days in Issaquah, etc.
+
+Apply a similar style to the sales.html page.
+
+### References
+
+- Target for the idea of store cards
