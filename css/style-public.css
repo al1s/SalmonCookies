@@ -1,0 +1,144 @@
+:root {
+  --primary-color: #222222;
+  --secondary-color: #ece7ee;
+  --neutral-color: #ffffff;
+  --neutral-color--brighter: #f0c796;
+}
+
+body {
+  background-color: var(--neutral-color);
+  font-family: "Exo 2", "Orbitron", Lato, "PT Sans", -apple-system,
+    BlinkMacSystemFont, Roboto, Ubuntu, "Droid Sans", "Helvetica Neue", Arial,
+    sans-serif;
+  font-size: 1rem;
+}
+
+.header__wrapper {
+  text-align: center;
+  width: 100%;
+}
+.main__header {
+  display: inline-block;
+  font-size: 1.4em;
+  font-weight: 700;
+  font-family: "Playfair Display", serif;
+  font-family: "Merriweather", serif;
+  line-height: 1;
+  margin: 0;
+  padding: 1em;
+  position: relative;
+  text-align: center;
+}
+.main__header:before,
+.main__header:after {
+  background-color: salmon;
+  content: "";
+  height: 0.1em;
+  position: absolute;
+  top: 1.5em;
+  width: 60%;
+}
+
+.main__address:before {
+  right: 10.5em;
+}
+.main__address:after {
+  left: 10.5em;
+}
+
+.main__mission:before {
+  right: 7.6em;
+}
+.main__mission:after {
+  left: 7.6em;
+}
+
+.main__merchendise:before {
+  right: 8em;
+}
+.main__merchendise:after {
+  left: 8em;
+}
+
+.main__about:before {
+  right: 6em;
+}
+.main__about:after {
+  left: 6em;
+}
+
+.teaser {
+}
+
+.wrapper {
+  margin: 0 auto;
+  width: 100%;
+}
+.teaser__header {
+  font-size: 1.9em;
+  font-weight: 900;
+  margin: 2rem;
+  text-align: center;
+}
+.teaser__description {
+}
+.teaser__picture {
+  /* background-image: url("/img/salmon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; */
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  max-width: 800px;
+  width: 100%;
+}
+.main__address {
+}
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+}
+.card {
+  flex: 0 0 auto;
+  min-width: 10rem;
+}
+.card__header {
+}
+.card__address {
+}
+.card__hours {
+}
+.main__mission {
+}
+.media__object {
+}
+.media__image {
+}
+.media__text {
+}
+.mission__text {
+}
+.main__merchendise {
+}
+.merchendise__text {
+}
+.main__about {
+}
+.about__text {
+}
+
+html {
+  box-sizing: border-box;
+  height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+*:focus {
+  outline: none;
+}
