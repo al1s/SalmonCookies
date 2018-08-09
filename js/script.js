@@ -28,6 +28,11 @@
 //               store.operations.staff.hourly/total.
 //   +4. Put the implementation of header/footer data in the separate functions.
 
+// Day 4
+// Build a public page
+// Use three different fonts
+// Add location, hours, contact info, description, about us, merchendise
+
 function adder(a, b) {
   return a + b;
 }
