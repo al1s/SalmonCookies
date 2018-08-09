@@ -60,19 +60,20 @@ function make12HourLabel(number) {
 }
 
 function renderStore(parentElm, target) {
+  var innerArr;
+  var totalElm;
   var row = createElmWithContent('tr', 'table__body  row');
   row.appendChild(createElmWithContent('th', 'header__cell', this.name));
   switch (target) {
   case 'cookies':
-    var innerArr = this.cookiesBoughtHour;
-    var totalElm = this.cookiesTotalDay;
+    innerArr = this.cookiesBoughtHour;
+    totalElm = this.cookiesTotalDay;
     break;
   case 'tossers':
-    var innerArr = this.tossersPerHour;
-    var totalElm = this.tossersTotalDay;
+    innerArr = this.tossersPerHour;
+    totalElm = this.tossersTotalDay;
     break;
   default:
-    var innerArr;
     break;
   }
   innerArr.forEach(elm => {
@@ -152,7 +153,12 @@ var tableSales = lists.appendChild(
 );
 
 // compose header content and render it
-var headerList = new Array(15).fill('').map(_ => make12HourLabel(timeShift++));
+// var headerList = new Array(15).fill('').map(_ => make12HourLabel(timeShift++));
+var headerList = new Array(15).fill(0);
+for (let i = 0; i < 15; i++) {
+  headerList[i] = make12HourLabel(i + timeShift);
+}
+
 headerList.unshift('');
 headerList.push('Daily Location Total');
 renderHeader(tableSales, headerList);
@@ -182,7 +188,6 @@ storeTotalsPerHour.unshift('Totals');
 renderFooter(tableSales, storeTotalsPerHour);
 
 // render table with staff
-timeShift = 6;
 lists.appendChild(
   createElmWithContent('h2', 'table__text-header', 'Staff requirements')
 );
@@ -191,7 +196,10 @@ var tableStaff = lists.appendChild(
 );
 
 // compose header content and render it
-headerList = new Array(15).fill('').map(_ => make12HourLabel(timeShift++));
+headerList = new Array(15).fill(0);
+for (let i = 0; i < 15; i++) {
+  headerList[i] = make12HourLabel(i + timeShift);
+}
 headerList.unshift('');
 headerList.push('Daily Location Total');
 renderHeader(tableStaff, headerList);
