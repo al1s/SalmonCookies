@@ -118,3 +118,5 @@ Apply a similar style to the sales.html page.
 ### References
 
 - Target for the idea of store cards
+- header with lines idea - https://html5book.ru/krasivye-zagolovki/
+- translucent background images - https://css-tricks.com/snippets/css/transparent-background-images/

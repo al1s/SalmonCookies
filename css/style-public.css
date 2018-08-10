@@ -1,6 +1,6 @@
 :root {
   --primary-color: #222222;
-  --secondary-color: #ece7ee;
+  --secondary-color: salmon;
   --neutral-color: #ffffff;
   --neutral-color--brighter: #f0c796;
 }
@@ -17,6 +17,11 @@ body {
   text-align: center;
   width: 100%;
 }
+
+.main {
+  width: 90vw;
+  margin: 1em auto;
+}
 .main__header {
   display: inline-block;
   font-size: 1.4em;
@@ -30,7 +35,7 @@ body {
 }
 .main__header:before,
 .main__header:after {
-  background-color: salmon;
+  background-color: var(--secondary-color);
   content: "";
   height: 0.1em;
   position: absolute;
@@ -52,10 +57,10 @@ body {
   left: 7.6em;
 }
 
-.main__merchendise:before {
+.main__merchandise:before {
   right: 8em;
 }
-.main__merchendise:after {
+.main__merchandise:after {
   left: 8em;
 }
 
@@ -66,13 +71,6 @@ body {
   left: 6em;
 }
 
-.teaser {
-}
-
-.wrapper {
-  margin: 0 auto;
-  width: 100%;
-}
 .teaser__header {
   font-size: 1.9em;
   font-weight: 900;
@@ -80,19 +78,16 @@ body {
   text-align: center;
 }
 .teaser__description {
+  margin: 0.3em auto;
+  text-align: center;
+  width: 90vw;
 }
 .teaser__picture {
-  /* background-image: url("/img/salmon.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center; */
   display: block;
   height: auto;
   margin: 0 auto;
   max-width: 800px;
   width: 100%;
-}
-.main__address {
 }
 .cards {
   display: flex;
@@ -100,11 +95,33 @@ body {
   justify-content: space-around;
 }
 .card {
-  border: var(--secondary-color) 2px solid;
-  flex: 0 0 auto;
+  border: 2px solid var(--secondary-color);
+  flex: 0 0 45%;
   margin: 0.3em;
   min-width: 10em;
   padding: 0.5em;
+  display: block;
+  position: relative;
+}
+.card::after {
+  content: "";
+  opacity: 0.3;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.card--odd::after {
+  background: url("/img/fish.jpg");
+}
+.card--even::after {
+  background: url("/img/frosted-cookie.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 .card__header {
   font-family: "Playfair Display", serif;
@@ -119,30 +136,42 @@ body {
   padding-top: 0.2em;
 }
 .media__object {
+  display: flex;
+  flex-wrap: nowrap;
+  margin: 0 auto;
 }
 .media__image {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  box-shadow: -1px 0px 14px -2px var(--primary-color);
+  flex: 1 1 30%;
 }
 .media__text {
-}
-.main__mission {
-}
-.mission__text {
-}
-.mission__image {
-}
-.main__merchendise {
-}
-.merchendise__text {
-}
-.merchendise__image {
-}
-.main__about {
-}
-.about__text {
-}
-.about__image {
+  flex: 1 1 70%;
+  padding: 0.7em;
 }
 
+.mission__image {
+  background-image: url("/img/family.jpg");
+}
+.merchandise__image {
+  background-image: url("/img/shirt.jpg");
+}
+.about__image {
+  background-image: url("/img/cutter.jpeg");
+}
+
+.footer {
+}
+
+.footer__picture {
+  display: block;
+  height: auto;
+  margin: 2em auto;
+  max-width: 200px;
+  width: 100%;
+}
 html {
   box-sizing: border-box;
   height: 100%;
@@ -157,3 +186,7 @@ html {
 *:focus {
   outline: none;
 }
+
+/* * {
+  outline: 1px solid red;
+} */
