@@ -1,12 +1,15 @@
 :root {
-  --primary-color: #222222;
-  --secondary-color: salmon;
-  --neutral-color: #ffffff;
+  --primary-color: salmon;
+  --primary-color--darker: rgb(155, 35, 22);
+  --secondary-color: #222;
+  --secondary-color--brighter: rgba(34, 34, 34, 0.842);
+  --neutral-color: #fff;
   --neutral-color--brighter: #f0c796;
 }
 
 body {
   background-color: var(--neutral-color);
+  color: var(--secondary-color);
   font-family: "Exo 2", "Orbitron", Lato, "PT Sans", -apple-system,
     BlinkMacSystemFont, Roboto, Ubuntu, "Droid Sans", "Helvetica Neue", Arial,
     sans-serif;
@@ -23,6 +26,7 @@ body {
   margin: 1em auto;
 }
 .main__header {
+  color: var(--primary-color--darker);
   display: inline-block;
   font-size: 1.4em;
   font-weight: 700;
@@ -35,7 +39,7 @@ body {
 }
 .main__header:before,
 .main__header:after {
-  background-color: var(--secondary-color);
+  background-color: var(--primary-color);
   content: "";
   height: 0.1em;
   position: absolute;
@@ -95,7 +99,7 @@ body {
   justify-content: space-around;
 }
 .card {
-  border: 2px solid var(--secondary-color);
+  border: 2px solid var(--primary-color);
   flex: 0 0 45%;
   margin: 0.3em;
   min-width: 10em;
@@ -139,15 +143,19 @@ body {
   display: flex;
   flex-wrap: nowrap;
   margin: 0 auto;
+  min-height: 10em;
 }
 .media__image {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  box-shadow: -1px 0px 14px -2px var(--primary-color);
+  box-shadow: -1px 0px 14px -2px var(--secondary-color);
   flex: 1 1 30%;
 }
 .media__text {
+  color: var(--secondary-color--brighter);
+  font-family: "Playfair Display", serif;
+  font-family: "Merriweather", serif;
   flex: 1 1 70%;
   padding: 0.7em;
 }
